@@ -42,7 +42,20 @@ export class BikeDatabase extends BaseDatabase {
       }
    }
 
-
+   public async alterBikePrice(
+      id: string,
+      price: number,
+   ): Promise<void> {
+      try {
+         const result = await BaseDatabase.connection.raw(`
+            UPDATE ${BikeDatabase.TABLE_NAME}
+            SET price = '${price}'
+            WHERE id = '${id}';
+         `)
+      } catch (error) {
+         throw new CustomError(500, "An unexpected error ocurred");
+      }
+   }
 
    public async getBikeById(id: string): Promise<Bike> {
       try {
@@ -63,6 +76,34 @@ export class BikeDatabase extends BaseDatabase {
          
          const result = await BaseDatabase.connection.raw(`
             SELECT * FROM ${BikeDatabase.TABLE_NAME};
+         `)
+
+         return result[0];
+
+      } catch (error) {
+         throw new CustomError(500, "An unexpected error ocurred");
+      }
+   }
+
+   public async getBikeByColor(color: string): Promise<Bike> {
+      try {
+         const result = await BaseDatabase.connection.raw(`
+            SELECT * FROM ${BikeDatabase.TABLE_NAME}
+            WHERE color LIKE '%${color}%';
+         `)
+
+         return result[0];
+
+      } catch (error) {
+         throw new CustomError(500, "An unexpected error ocurred");
+      }
+   }
+
+   public async getBikeByPrice(price: string): Promise<Bike> {
+      try {
+         const result = await BaseDatabase.connection.raw(`
+            SELECT * FROM ${BikeDatabase.TABLE_NAME}
+            WHERE price >= ${price};
          `)
 
          return result[0];

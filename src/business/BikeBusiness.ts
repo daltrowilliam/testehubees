@@ -23,6 +23,14 @@ export class BikeBusiness {
       throw new CustomError(400, "'color', 'gears', 'brand', 'model' and 'price' must be informed!");
      }
 
+     if(isNaN(Number(bike.gears))){
+      throw new CustomError(400, "Gears must be a valid number");
+     }
+
+     if(isNaN(Number(bike.price))){
+      throw new CustomError(400, "Price must be a valid number");
+     }
+
       const id = this.idGenerator.generate();
 
          await this.bikeDatabase.registryBike(
@@ -37,17 +45,32 @@ export class BikeBusiness {
       return "Registry Done!";
    }
 
-   async getBikeById(id: string) {
+   
+   async alterBikePrice(id: string, price: any) {
 
+      const bikeFromDB = await this.bikeDatabase.getBikeById(id);
 
-      const bike = await this.bikeDatabase.getBikeById(id);
-
-      if (!bike) {
+      if (!bikeFromDB) {
          throw new CustomError(404, "Bicycle Not Found!");
       }
 
-      return bike;
+      if (!price) {
+         throw new CustomError(400, "'Price' must be informed!");
+     }
+
+     if(isNaN(Number(price))){
+      throw new CustomError(400, "Price must be a valid number");
+     }
+
+
+      await this.bikeDatabase.alterBikePrice(
+         id,
+         price
+      );
+
+      return "Bicycle price updated!";
    }
+
 
    async deleteBikeById(id: string) {
 
@@ -59,7 +82,37 @@ export class BikeBusiness {
 
       await this.bikeDatabase.deleteBikeById(id);
 
+      return "Bicycle deleted!"
+
    }
+
+   async getBikeByColor(color: any) {
+
+
+      const bike: any = await this.bikeDatabase.getBikeByColor(color);
+   
+      if (bike.length === 0) {
+         throw new CustomError(404, "Bicycle Not Found!");
+      }
+
+      return bike;
+   }
+
+   async getBikeByPrice(price: any) {
+
+      if(isNaN(Number(price))){
+         throw new CustomError(400, "Price must be a valid number");
+      }
+
+      const bike: any = await this.bikeDatabase.getBikeByPrice(price);
+   
+      if (bike.length === 0) {
+         throw new CustomError(404, "Bicycle Not Found!");
+      }
+
+      return bike;
+   }
+   
 
    async getAllBikes() {
 

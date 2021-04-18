@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
 import { BikeInputDTO } from "../business/entities/Bike";
-import { Authenticator } from "../business/services/Authenticator";
-import { HashManager } from "../business/services/HashManager";
 import { IdGenerator } from "../business/services/IdGenerator";
 import { BikeBusiness } from "../business/BikeBusiness";
 import { BikeDatabase } from "../data/BikeDatabase";
 
 const bikeBusiness = new BikeBusiness(
    new IdGenerator(),
-   new HashManager,
-   new Authenticator(),
    new BikeDatabase()
 );
 
@@ -36,15 +32,13 @@ export class BikeController {
       }
    }
 
-
-
-   async getBikeById(req: Request, res: Response) {
+   async getBikeByColor(req: Request, res: Response) {
 
       try {
 
-         const id = req.params.id;
-
-         const bike = await bikeBusiness.getBikeById(id);
+         const color = req.query.color;
+       
+         const bike = await bikeBusiness.getBikeByColor(color);
 
          res.status(200).send({ bike });
 
@@ -55,6 +49,40 @@ export class BikeController {
       }
    }
 
+   async getBikeByPrice(req: Request, res: Response) {
+
+      try {
+
+         const price = req.query.price;
+       
+         const bike = await bikeBusiness.getBikeByPrice(price);
+
+         res.status(200).send({ bike });
+
+      } catch (error) {
+         res
+            .status(error.statusCode || 400)
+            .send({ error: error.message });
+      }
+   }
+
+   async alterBikePrice(req: Request, res: Response) {
+      try {
+
+         const id = req.params.id;
+
+         const price: number = req.body.price
+
+         const message = await bikeBusiness.alterBikePrice(id, price);
+
+         res.status(200).send({ message });
+
+      } catch (error) {
+         res
+            .status(error.statusCode || 400)
+            .send({ error: error.message });
+      }
+   }
 
 
 async getAllBikes(req: Request, res: Response) {
@@ -79,9 +107,9 @@ async deleteBikeById(req: Request, res: Response) {
 
       const id = req.params.id;
 
-      await bikeBusiness.deleteBikeById(id);
+      const message = await bikeBusiness.deleteBikeById(id);
 
-      res.status(200).send("bicycle deleted!");
+      res.status(200).send({ message });
 
    } catch (error) {
       res
