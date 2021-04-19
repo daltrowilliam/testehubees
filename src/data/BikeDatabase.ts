@@ -2,6 +2,7 @@ import { BaseDatabase } from "./BaseDatabase";
 import { Bike } from "../business/entities/Bike";
 import { CustomError } from "../business/error/CustomError";
 
+
 export class BikeDatabase extends BaseDatabase {
 
    private static TABLE_NAME = "hubees_bikes";
@@ -58,17 +59,21 @@ export class BikeDatabase extends BaseDatabase {
    }
 
    public async getBikeById(id: string): Promise<Bike> {
+      let result
       try {
-         const result = await BaseDatabase.connection.raw(`
+         result = await BaseDatabase.connection.raw(`
             SELECT * FROM ${BikeDatabase.TABLE_NAME}
-            WHERE id = '${id}';
+            WHERE id = "${id}";
          `)
 
-         return BikeDatabase.toBikeModel(result[0][0]);
-
+         if (!result[0][0]) {
+            throw new Error;
+         }
+         
       } catch (error) {
-         throw new CustomError(500, "An unexpected error ocurred");
+         throw new CustomError(404, "Bycicle Not Found");
       }
+      return BikeDatabase.toBikeModel(result[0][0]);
    }
 
    public async getAllBikes(): Promise<Bike> {

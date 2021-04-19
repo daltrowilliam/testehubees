@@ -48,12 +48,9 @@ export class BikeBusiness {
    
    async alterBikePrice(id: string, price: any) {
 
-      const bikeFromDB = await this.bikeDatabase.getBikeById(id);
-
-      if (!bikeFromDB) {
-         throw new CustomError(404, "Bicycle Not Found!");
-      }
-
+      
+      await this.bikeDatabase.getBikeById(id);
+       
       if (!price) {
          throw new CustomError(400, "'Price' must be informed!");
      }
@@ -61,7 +58,6 @@ export class BikeBusiness {
      if(isNaN(Number(price))){
       throw new CustomError(400, "Price must be a valid number");
      }
-
 
       await this.bikeDatabase.alterBikePrice(
          id,
@@ -75,6 +71,7 @@ export class BikeBusiness {
    async deleteBikeById(id: string) {
 
       const bike = await this.bikeDatabase.getBikeById(id);
+
 
       if (!bike) {
          throw new CustomError(404, "Bicycle Not Found!");
