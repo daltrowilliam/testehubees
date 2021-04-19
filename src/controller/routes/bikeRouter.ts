@@ -12,4 +12,3 @@ bikeRouter.delete("/delete/:id", bikeController.deleteBikeById);
 bikeRouter.get("/", bikeController.getAllBikes);
 bikeRouter.get("/bycolor?", bikeController.getBikeByColor);
 bikeRouter.get("/byprice?", bikeController.getBikeByPrice);
-//bikeRouter.get("/:id", bikeController.getBikeById);
