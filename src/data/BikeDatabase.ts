@@ -103,7 +103,7 @@ export class BikeDatabase extends BaseDatabase {
       try {
          const result = await BaseDatabase.connection.raw(`
             SELECT * FROM ${BikeDatabase.TABLE_NAME}
-            WHERE price >= ${price};
+            WHERE price <= ${price};
          `)
 
          return result[0];
