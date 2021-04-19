@@ -24,6 +24,8 @@ Opcional: Publique este serviço no Heroku
 
 =============================
 
+##Criação da Tabela
+
 TABLE hubees_bikes(
 id VARCHAR(255) NOT NULL PRIMARY KEY,
 color VARCHAR(255) NOT NULL,
