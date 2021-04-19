@@ -70,12 +70,7 @@ export class BikeBusiness {
 
    async deleteBikeById(id: string) {
 
-      const bike = await this.bikeDatabase.getBikeById(id);
-
-
-      if (!bike) {
-         throw new CustomError(404, "Bicycle Not Found!");
-      }
+      await this.bikeDatabase.getBikeById(id);
 
       await this.bikeDatabase.deleteBikeById(id);
 
